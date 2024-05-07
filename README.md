@@ -10,3 +10,5 @@ TODO:
 -more encounters (combat, inbetween, combat etc)
 
 -more oop
+
+-graphical interface with either curses or pygame
