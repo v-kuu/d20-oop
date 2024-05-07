@@ -1,2 +1,7 @@
 # d20-oop
-A simple text game utilizing D20 based combat from Dungeons &amp; Dragons TTRPG written in Python and following OOP principles.
+A simple text game utilizing a d20 based TTRPG combat system.
+
+TODO:
+-csv file for a list of enemies to randomize
+-csv file for more classes to choose from
+-more encounters (combat, inbetween, combat etc)
