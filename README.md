@@ -9,3 +9,4 @@ TODO:
 
 -more encounters (combat, inbetween, combat etc)
 
+-more oop
