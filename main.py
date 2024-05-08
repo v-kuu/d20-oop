@@ -19,7 +19,7 @@ class Combatant:
 
 def statAssign(type):
     nameList = []
-    database = []
+    dataBase = []
     if type == 'player':
         with open('playerClasses.csv', mode='r') as csvfile:
             reader = csv.DictReader(csvfile)
@@ -27,7 +27,7 @@ def statAssign(type):
             for row in reader:
                 print(row['name'], row['hp'], row['ab'], row['ac'])
                 nameList.append(row['name'])
-                database.append(row)
+                dataBase.append(row)
         while True:
             playerClass = input('Pick a class: ')
             if playerClass in nameList:
@@ -35,15 +35,15 @@ def statAssign(type):
                 break
             else:
                 print('Class not found.')
-        return next(filter(lambda name: name['name'] == playerClass, database))
+        return next(filter(lambda name: name['name'] == playerClass, dataBase))
     elif type == 'enemy':
         with open('enemyList.csv', mode='r') as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
                 nameList.append(row['name'])
-                database.append(row)
+                dataBase.append(row)
         choice = random.choice(nameList)
-        return next(filter(lambda name: name['name'] == choice, database))
+        return next(filter(lambda name: name['name'] == choice, dataBase))
     else:
         print('Error: Expected player or enemy.')
 def attack(targetAC, currentAB):
