@@ -1,40 +1,51 @@
 import random
 import sys
-
-playerStats = {'hp': 0, 'ab': 0, 'ac': 0}
-enemyStats = {'hp': 3, 'ab': 1, 'ac': 12}
+import csv
 
 
 def main():
-    classSelector()
+    playerStats = statAssign('player')
+    enemyStats = statAssign('enemy')
     combat(playerStats, enemyStats)
 
 
 class Combatant:
-    def __init__(self, hp, ab, ac):
-        self.hp = hp
-        self.ab = ab
-        self.ac = ac
+    def __init__(self, name, hp, ab, ac):
+        self.name = name
+        self.hp = int(hp)
+        self.ab = int(ab)
+        self.ac = int(ac)
 
 
-def classSelector():
-    global playerStats
-    while True:
-        playerClass = input('Pick either Fighter or Barbarian: ')
-        playerClass = playerClass.lower()
-        if playerClass == 'fighter' or playerClass == 'barbarian':
-            break
-
-    print(f'You have chosen {playerClass}.')
-    if playerClass == 'fighter':
-        playerStats['hp'], playerStats['ab'], playerStats['ac'] = 3, 1, 15
-    elif playerClass == 'barbarian':
-        playerStats['hp'], playerStats['ab'], playerStats['ac'] = 4, 3, 10
+def statAssign(type):
+    nameList = []
+    database = []
+    if type == 'player':
+        with open('playerClasses.csv', mode='r') as csvfile:
+            reader = csv.DictReader(csvfile)
+            print(*reader.fieldnames)
+            for row in reader:
+                print(row['name'], row['hp'], row['ab'], row['ac'])
+                nameList.append(row['name'])
+                database.append(row)
+        while True:
+            playerClass = input('Pick a class: ')
+            if playerClass in nameList:
+                print(f'You have chosen {playerClass}')
+                break
+            else:
+                print('Class not found.')
+        return next(filter(lambda name: name['name'] == playerClass, database))
+    elif type == 'enemy':
+        with open('enemyList.csv', mode='r') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                nameList.append(row['name'])
+                database.append(row)
+        choice = random.choice(nameList)
+        return next(filter(lambda name: name['name'] == choice, database))
     else:
-        print('Error: Invalid class.')
-    print(f"You have {playerStats['hp']} HP, {playerStats['ab']} AB and {playerStats['ac']} AC.")
-
-
+        print('Error: Expected player or enemy.')
 def attack(targetAC, currentAB):
     if random.randint(1, 20) + currentAB >= targetAC:
         return True
@@ -45,7 +56,7 @@ def attack(targetAC, currentAB):
 def combat(yourStats, theirStats):
     player = Combatant(**yourStats)
     enemy = Combatant(**theirStats)
-    print('An enemy of appears!')
+    print(f'{player.name} encounters {enemy.name}!')
     while enemy.hp > 0 and player.hp > 0:
         print('Do you wish to (a)ttack or (r)un?')
         choice = input()
@@ -71,4 +82,5 @@ def combat(yourStats, theirStats):
         print('Defeat!')
 
 
-main()
+if __name__ == '__main__':
+    main()

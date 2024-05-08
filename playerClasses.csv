@@ -1,3 +1,3 @@
-hp,ab,ac,class
-3,1,15,fighter
-4,3,10,barbarian
+name,hp,ab,ac
+Fighter,3,1,15
+Barbarian,4,3,10
