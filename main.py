@@ -5,8 +5,12 @@ import csv
 
 def main():
     playerStats = statAssign('player')
-    enemyStats = statAssign('enemy')
-    combat(playerStats, enemyStats)
+    while True:
+        enemyStats = statAssign('enemy')
+        results = combat(playerStats, enemyStats)
+        print('You rest for a while and heal.')
+        playerStats['hp'] = results + 1
+        print(f"You now have {playerStats['hp']}HP.")
 
 
 class Combatant:
@@ -63,13 +67,13 @@ def combat(yourStats, theirStats):
         if choice == 'a':
             if attack(enemy.ac, player.ab) == True:
                 enemy.hp = enemy.hp - 1
-                print('You attack and hit! Enemy has ' + str(enemy.hp) + 'hp left.')
+                print(f"You attack and hit! Enemy has {enemy.hp}hp left.")
             else:
                 print('You attack and miss!')
             if enemy.hp > 0:
                 if attack(player.ac, enemy.ab) == True:
                     player.hp = player.hp - 1
-                    print("The enemy counterattacks. You're hit! You have " + str(player.hp) + "hp left.")
+                    print(f"The enemy counterattacks. You're hit! You have {player.hp}hp left.")
                 else:
                     print('The enemy strikes you. You dodge!')
         elif choice == 'r':
@@ -78,8 +82,10 @@ def combat(yourStats, theirStats):
             print('Invalid input')
     if enemy.hp == 0:
         print('Victory!')
+        return player.hp
     else:
         print('Defeat!')
+        sys.exit()
 
 
 if __name__ == '__main__':
