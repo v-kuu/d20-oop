@@ -4,9 +4,10 @@ import csv
 
 
 def main():
-    playerStats = statAssign('player')
+    playerStats = statAssign('playerClasses.csv')
+    print(f"You have {playerStats['hp']}HP, {playerStats['ab']}AB and {playerStats['ac']}AC.")
     while True:
-        enemyStats = statAssign('enemy')
+        enemyStats = statAssign('enemyList.csv')
         results = combat(playerStats, enemyStats)
         print('You rest for a while and heal.')
         playerStats['hp'] = results + 1
@@ -16,40 +17,39 @@ def main():
 class Combatant:
     def __init__(self, name, hp, ab, ac):
         self.name = name
-        self.hp = int(hp)
-        self.ab = int(ab)
-        self.ac = int(ac)
+        self.hp = hp
+        self.ab = ab
+        self.ac = ac
 
 
-def statAssign(type):
-    nameList = []
-    dataBase = []
-    if type == 'player':
-        with open('playerClasses.csv', mode='r') as csvfile:
-            reader = csv.DictReader(csvfile)
-            print(*reader.fieldnames)
-            for row in reader:
-                print(row['name'], row['hp'], row['ab'], row['ac'])
-                nameList.append(row['name'])
-                dataBase.append(row)
+def statAssign(file):
+    nameList, dataBase, fieldNames = ([] for i in range(3))
+    with open(file, mode='r') as csvfile:
+        reader = csv.DictReader(csvfile)
+        fieldNames.extend(reader.fieldnames)
+        for row in reader:
+            nameList.append(row['name'])
+            dataBase.append(row)
+    for stats in dataBase:
+        for key in stats:
+            if stats[key].isnumeric():
+                stats[key] = int(stats[key])
+    if file == 'playerClasses.csv':
+        print(*fieldNames)
+        for row in dataBase:
+            print(row['name'], row['hp'], row['ab'], row['ac'])
         while True:
-            playerClass = input('Pick a class: ')
-            if playerClass in nameList:
-                print(f'You have chosen {playerClass}')
+            choice = input('Pick a class: ')
+            if choice in nameList:
+                print(f'You have chosen {choice}')
                 break
             else:
                 print('Class not found.')
-        return next(filter(lambda name: name['name'] == playerClass, dataBase))
-    elif type == 'enemy':
-        with open('enemyList.csv', mode='r') as csvfile:
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                nameList.append(row['name'])
-                dataBase.append(row)
+    elif file == 'enemyList.csv':
         choice = random.choice(nameList)
-        return next(filter(lambda name: name['name'] == choice, dataBase))
     else:
-        print('Error: Expected player or enemy.')
+        raise FileNotFoundError('Invalid filename.')
+    return next(filter(lambda name: name['name'] == choice, dataBase))
 def attack(targetAC, currentAB):
     if random.randint(1, 20) + currentAB >= targetAC:
         return True
