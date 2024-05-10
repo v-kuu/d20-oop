@@ -3,10 +3,8 @@ A simple text game utilizing a d20 based TTRPG combat system.
 
 TODO:
 
--clean up csv reading
-
 -more encounters (combat, inbetween, combat etc)
 
--tracking of stats
+-tracking of more stats
 
 -GUI with curses or pygame or similar
