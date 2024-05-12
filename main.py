@@ -1,9 +1,9 @@
 import random
 import sys
 import csv
+import curses
 
-
-def main():
+def main(stdscr):
     playerStats = statAssign('playerClasses.csv')
     print(f"You have {playerStats['hp']}HP, {playerStats['ab']}AB and {playerStats['ac']}AC.")
     while True:
@@ -89,4 +89,4 @@ def combat(yourStats, theirStats):
 
 
 if __name__ == '__main__':
-    main()
+    curses.wrapper(main)
