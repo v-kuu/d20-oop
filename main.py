@@ -4,14 +4,26 @@ import csv
 import curses
 
 def main(stdscr):
-    playerStats = statAssign('playerClasses.csv')
-    print(f"You have {playerStats['hp']}HP, {playerStats['ab']}AB and {playerStats['ac']}AC.")
-    while True:
-        enemyStats = statAssign('enemyList.csv')
-        results = combat(playerStats, enemyStats)
-        print('You rest for a while and heal.')
-        playerStats['hp'] = results + 1
-        print(f"You now have {playerStats['hp']}HP.")
+    # color pairs here
+    stdscr.clear()
+    stdscr.addstr('----D20----', curses.A_STANDOUT)
+    stdscr.refresh()
+    graphicWin = curses.newwin(10, 20, 2, 1)
+    consoleWin = curses.newwin(20, 20, 13, 1)
+    stdscr.getch()
+
+
+
+
+
+   # playerStats = statAssign('playerClasses.csv')
+   # print(f"You have {playerStats['hp']}HP, {playerStats['ab']}AB and {playerStats['ac']}AC.")
+   # while True:
+    #    enemyStats = statAssign('enemyList.csv')
+     #   results = combat(playerStats, enemyStats)
+      #  print('You rest for a while and heal.')
+       # playerStats['hp'] = results + 1
+        #print(f"You now have {playerStats['hp']}HP.")
 
 
 class Combatant:
