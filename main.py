@@ -4,19 +4,23 @@ import csv
 import curses
 
 def main(stdscr):
-    # color pairs here
     stdscr.clear()
     stdscr.addstr('----D20----', curses.A_STANDOUT)
     stdscr.refresh()
     graphicWin = curses.newwin(10, 20, 2, 1)
     consoleWin = curses.newwin(20, 20, 13, 1)
+
+    playerStats = statAssign('playerClasses.csv', consoleWin)
+
+
+    consoleWin.clear()
+    consoleWin.addstr(f"You have {playerStats['hp']}HP, {playerStats['ab']}AB and {playerStats['ac']}AC.")
+    consoleWin.refresh()
     stdscr.getch()
 
 
 
 
-
-   # playerStats = statAssign('playerClasses.csv')
    # print(f"You have {playerStats['hp']}HP, {playerStats['ab']}AB and {playerStats['ac']}AC.")
    # while True:
     #    enemyStats = statAssign('enemyList.csv')
@@ -34,7 +38,7 @@ class Combatant:
         self.ac = ac
 
 
-def statAssign(file):
+def statAssign(file, window):
     nameList, dataBase, fieldNames = ([] for i in range(3))
     with open(file, mode='r') as csvfile:
         reader = csv.DictReader(csvfile)
@@ -47,9 +51,10 @@ def statAssign(file):
             if stats[key].isnumeric():
                 stats[key] = int(stats[key])
     if file == 'playerClasses.csv':
-        print(*fieldNames)
+        window.clear()
+        window.insnstr(*fieldNames)
         for row in dataBase:
-            print(row['name'], row['hp'], row['ab'], row['ac'])
+            window.insnstr(row['name'], row['hp'], row['ab'], row['ac'])
         while True:
             choice = input('Pick a class: ')
             if choice in nameList:
