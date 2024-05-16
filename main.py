@@ -2,25 +2,33 @@ import random
 import sys
 import csv
 import curses
-from curses.textpad import Textbox, rectangle
+
 
 def main(stdscr):
+    curses.init_pair(1, curses.COLOR_RED, curses.COLOR_WHITE)
+    redNwhite = curses.color_pair(1)
+    #stdscr.clear()
     graphicWin = curses.newwin(10, 20, 3, 2)
-    rectangle(stdscr, 2, 1, 13, 22)
-    consoleWin = curses.newwin(20, 20, 15, 2)
-    rectangle(stdscr, 14, 2, 23, 22)
-    stdscr.clear()
+    graphicWin.attron(redNwhite)
+    graphicWin.border()
+    graphicWin.attroff(redNwhite)
+    graphicWin.noutrefresh()
+    consoleWin = curses.newwin(50, 50, 15, 2)
+    consoleWin.attron(redNwhite)
+    consoleWin.border()
+    consoleWin.attroff(redNwhite)
+    consoleWin.noutrefresh()
     stdscr.addstr('----D20----', curses.A_STANDOUT)
-    stdscr.refresh()
-
-
-    playerStats = statAssign('playerClasses.csv', consoleWin)
-
-
-    consoleWin.clear()
-    consoleWin.addstr(f"You have {playerStats['hp']}HP, {playerStats['ab']}AB and {playerStats['ac']}AC.")
-    consoleWin.refresh()
+    stdscr.noutrefresh()
+    curses.doupdate()
     stdscr.getch()
+
+    #playerStats = statAssign('playerClasses.csv', consoleWin)
+
+
+    #consoleWin.clear()
+    #consoleWin.addstr(f"You have {playerStats['hp']}HP, {playerStats['ab']}AB and {playerStats['ac']}AC.")
+    #consoleWin.refresh()
 
 
 
@@ -56,9 +64,9 @@ def statAssign(file, window):
                 stats[key] = int(stats[key])
     if file == 'playerClasses.csv':
         window.clear()
-        window.addstr(0, 0, *fieldNames, curses.A_NORMAL)
+        window.addstr(0, 0, str(fieldNames))
         for row in dataBase:
-            window.insnstr(row['name'], row['hp'], row['ab'], row['ac'])
+            window.addstr(str(row['name']) + str(row['hp']) + str(row['ab']) + str(row['ac']))
         while True:
             choice = input('Pick a class: ')
             if choice in nameList:
