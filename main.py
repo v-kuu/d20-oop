@@ -2,13 +2,17 @@ import random
 import sys
 import csv
 import curses
+from curses.textpad import Textbox, rectangle
 
 def main(stdscr):
+    graphicWin = curses.newwin(10, 20, 3, 2)
+    rectangle(stdscr, 2, 1, 13, 22)
+    consoleWin = curses.newwin(20, 20, 15, 2)
+    rectangle(stdscr, 14, 2, 23, 22)
     stdscr.clear()
     stdscr.addstr('----D20----', curses.A_STANDOUT)
     stdscr.refresh()
-    graphicWin = curses.newwin(10, 20, 2, 1)
-    consoleWin = curses.newwin(20, 20, 13, 1)
+
 
     playerStats = statAssign('playerClasses.csv', consoleWin)
 
@@ -52,7 +56,7 @@ def statAssign(file, window):
                 stats[key] = int(stats[key])
     if file == 'playerClasses.csv':
         window.clear()
-        window.insnstr(*fieldNames)
+        window.addstr(0, 0, *fieldNames, curses.A_NORMAL)
         for row in dataBase:
             window.insnstr(row['name'], row['hp'], row['ab'], row['ac'])
         while True:
