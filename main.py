@@ -1,7 +1,6 @@
 import random
 import sys
 import csv
-import curses
 
 def main(stdscr):
     playerStats = statAssign('playerClasses.csv')
@@ -89,4 +88,4 @@ def combat(yourStats, theirStats):
 
 
 if __name__ == '__main__':
-    curses.wrapper(main)
+    main()
