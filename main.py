@@ -2,8 +2,7 @@ import random
 import sys
 import csv
 import curses
-import curses.textpad as textpad
-
+from curses.textpad import rectangle
 
 def main(stdscr):
     height, width = stdscr.getmaxyx()
@@ -11,36 +10,33 @@ def main(stdscr):
     redNwhite = curses.color_pair(1)
     stdscr.box()
     stdscr.addstr(0, 2, '----D20----', curses.A_STANDOUT)
+    stdscr.attron(redNwhite)
+    rectangle(stdscr, 1, 1, 12, width - 3)
+    rectangle(stdscr, 13, 1, height - 2, width -3)
+    stdscr.attroff(redNwhite)
     stdscr.noutrefresh()
-    graphicWin = curses.newwin(10, width - 2, 1, 1)
-    graphicWin.attron(redNwhite)
-    graphicWin.border()
-    graphicWin.attroff(redNwhite)
+    graphicWin = curses.newwin(10, width - 5, 2, 2)
     graphicWin.noutrefresh()
-    consoleWin = curses.newwin(height - 2, width - 2, 11, 1)
-    consoleWin.attron(redNwhite)
-    consoleWin.border()
-    consoleWin.attroff(redNwhite)
+    consoleWin = curses.newwin(height - 16, width - 5, 14, 2)
     consoleWin.noutrefresh()
     curses.doupdate()
 
     playerStats = statAssign('playerClasses.csv', consoleWin)
-
-
-    #consoleWin.clear()
-    #consoleWin.addstr(f"You have {playerStats['hp']}HP, {playerStats['ab']}AB and {playerStats['ac']}AC.")
-    #consoleWin.refresh()
-
-
-
-
-   # print(f"You have {playerStats['hp']}HP, {playerStats['ab']}AB and {playerStats['ac']}AC.")
-   # while True:
-    #    enemyStats = statAssign('enemyList.csv')
-     #   results = combat(playerStats, enemyStats)
-      #  print('You rest for a while and heal.')
-       # playerStats['hp'] = results + 1
-        #print(f"You now have {playerStats['hp']}HP.")
+    consoleWin.clear()
+    consoleWin.noutrefresh()
+    curses.doupdate()
+    while True:
+        graphicWin.addstr(1, 2, f"{playerStats['name']}".upper(), curses.A_REVERSE)
+        graphicWin.addstr(3, 2, f"Hit points: {playerStats['hp']}")
+        graphicWin.addstr(5, 2, f"Attack bonus: +{playerStats['ab']}")
+        graphicWin.addstr(7, 2, f"Armor class: {playerStats['ac']}")
+        graphicWin.noutrefresh()
+        curses.doupdate()
+        enemyStats = statAssign('enemyList.csv', consoleWin)
+        results = combat(playerStats, enemyStats)
+        print('You rest for a while and heal.')
+        playerStats['hp'] = results + 1
+        print(f"You now have {playerStats['hp']}HP.")
     stdscr.getch()
 
 class Combatant:
@@ -65,21 +61,23 @@ def statAssign(file, window):
                 stats[key] = int(stats[key])
     if file == 'playerClasses.csv':
         fields = "//".join(fieldNames)
-        window.addstr(1, 1, fields.upper())
-        line = 2
-        for row in dataBase:
-            window.addstr(line, 1, f"{row['name']}, {row['hp']}, {row['ab']}, {row['ac']}")
+        window.addstr(0, 1, fields.upper())
+        line = 1
+        for i, row in enumerate(dataBase):
+            window.addstr(line, 1, f"{i+1}. {row['name']}, {row['hp']}, {row['ab']}, {row['ac']}")
             line += 1
-        window.addstr(line + 1, 1, 'Pick a class:')
+        window.addstr(line + 1, 1, 'Pick a class (n):')
         window.noutrefresh()
         curses.doupdate()
         while True:
-            choice = input('Pick a class: ')
-            if choice in nameList:
-                print(f'You have chosen {choice}')
-                break
-            else:
-                print('Class not found.')
+            key = window.getkey()
+            try:
+                if 1 <= int(key) <= len(nameList):
+                    choice = nameList[int(key) - 1]
+                    break
+            except ValueError:
+                continue
+
     elif file == 'enemyList.csv':
         choice = random.choice(nameList)
     else:
