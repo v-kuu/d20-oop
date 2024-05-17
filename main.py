@@ -2,28 +2,29 @@ import random
 import sys
 import csv
 import curses
+import curses.textpad as textpad
 
 
 def main(stdscr):
+    height, width = stdscr.getmaxyx()
     curses.init_pair(1, curses.COLOR_RED, curses.COLOR_WHITE)
     redNwhite = curses.color_pair(1)
-    #stdscr.clear()
-    graphicWin = curses.newwin(10, 20, 3, 2)
+    stdscr.box()
+    stdscr.addstr(0, 2, '----D20----', curses.A_STANDOUT)
+    stdscr.noutrefresh()
+    graphicWin = curses.newwin(10, width - 2, 1, 1)
     graphicWin.attron(redNwhite)
     graphicWin.border()
     graphicWin.attroff(redNwhite)
     graphicWin.noutrefresh()
-    consoleWin = curses.newwin(50, 50, 15, 2)
+    consoleWin = curses.newwin(height - 2, width - 2, 11, 1)
     consoleWin.attron(redNwhite)
     consoleWin.border()
     consoleWin.attroff(redNwhite)
     consoleWin.noutrefresh()
-    stdscr.addstr('----D20----', curses.A_STANDOUT)
-    stdscr.noutrefresh()
     curses.doupdate()
-    stdscr.getch()
 
-    #playerStats = statAssign('playerClasses.csv', consoleWin)
+    playerStats = statAssign('playerClasses.csv', consoleWin)
 
 
     #consoleWin.clear()
@@ -40,7 +41,7 @@ def main(stdscr):
       #  print('You rest for a while and heal.')
        # playerStats['hp'] = results + 1
         #print(f"You now have {playerStats['hp']}HP.")
-
+    stdscr.getch()
 
 class Combatant:
     def __init__(self, name, hp, ab, ac):
@@ -63,10 +64,15 @@ def statAssign(file, window):
             if stats[key].isnumeric():
                 stats[key] = int(stats[key])
     if file == 'playerClasses.csv':
-        window.clear()
-        window.addstr(0, 0, str(fieldNames))
+        fields = "//".join(fieldNames)
+        window.addstr(1, 1, fields.upper())
+        line = 2
         for row in dataBase:
-            window.addstr(str(row['name']) + str(row['hp']) + str(row['ab']) + str(row['ac']))
+            window.addstr(line, 1, f"{row['name']}, {row['hp']}, {row['ab']}, {row['ac']}")
+            line += 1
+        window.addstr(line + 1, 1, 'Pick a class:')
+        window.noutrefresh()
+        curses.doupdate()
         while True:
             choice = input('Pick a class: ')
             if choice in nameList:
