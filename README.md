@@ -1,4 +1,4 @@
-# d20-oop
+# d20-text-game
 A simple text game utilizing a d20 based TTRPG combat system.
 
 Features include:
