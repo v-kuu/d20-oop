@@ -27,6 +27,7 @@ def main(stdscr):
     consoleWin.noutrefresh()
     curses.doupdate()
     while True:
+        graphicWin.clear()
         graphicWin.addstr(1, 2, f"{playerStats['name']}".upper(), curses.A_REVERSE)
         graphicWin.addstr(3, 2, f"Hit points: {playerStats['hp']}")
         graphicWin.addstr(5, 2, f"Attack bonus: +{playerStats['ab']}")
@@ -103,6 +104,7 @@ def combat(yourStats, theirStats, graphicWindow, textWindow):
         textWindow.noutrefresh()
         curses.doupdate()
         choice = textWindow.getkey()
+        textWindow.clear()
         if choice.lower() == 'a':
             if attack(enemy.ac, player.ab) == True:
                 enemy.hp = enemy.hp - 1
@@ -123,8 +125,10 @@ def combat(yourStats, theirStats, graphicWindow, textWindow):
         elif choice.lower() == 'r':
             sys.exit()
         else:
+            textWindow.clear()
             textWindow.addstr(1, 1, 'Invalid input')
             textWindow.noutrefresh()
+            time.sleep(1)
     if enemy.hp == 0:
         textWindow.clear()
         textWindow.addstr(1, 1, 'Victory!', curses.A_STANDOUT)
