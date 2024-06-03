@@ -146,4 +146,4 @@ def combat(yourStats, theirStats, graphicWindow, textWindow):
 
 
 if __name__ == '__main__':
-    curses.wrapper(main)
+    main()

@@ -1,10 +1,12 @@
 # d20-oop
 A simple text game utilizing a d20 based TTRPG combat system.
 
+Features include:
+
+-CSV files to store player and enemy templates on disk for easy modding and lighter memory load
+
+-Curses GUI
+
 TODO:
 
--more encounters (combat, inbetween, combat etc)
-
--tracking of more stats
-
--GUI with curses or pygame or similar
+-Cleanup
